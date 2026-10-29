@@ -1,0 +1,10 @@
+{
+  "name": "Mystic Mikado — Shadow Dragon Reader",
+  "short_name": "Mystic Mikado",
+  "description": "An offline-first RSS and Atom reader with private, opt-in blog discovery.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0c10",
+  "theme_color": "#0c0c10",
+  "icons": []
+}

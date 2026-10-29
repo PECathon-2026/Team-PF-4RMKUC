@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c0c10">
+<meta name="description" content="Mystic Mikado is an offline-first, chronological RSS and Atom reader with anonymous, opt-in blog discovery.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/style.css">
+<title>御門 Mystic Mikado — Shadow Dragon Reader</title>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <h1 class="torii"><span class="kanji">御門</span><span class="sub">Mystic Mikado</span></h1>
+    <form class="row" id="add" style="margin-top:0">
+      <input class="field" id="addr" type="url" placeholder="Blog or feed address" aria-label="Blog or feed address" required>
+      <button class="seal" aria-label="Follow blog">＋</button>
+    </form>
+    <p class="note" id="msg" role="status" aria-live="polite"></p>
+    <p class="section-kicker">YOUR SUBSCRIPTIONS</p>
+    <ul class="feeds" id="feeds"></ul>
+    <div class="row side-actions">
+      <button class="seal" id="lot" type="button">御神籤 Omikuji</button>
+      <button class="ghost" id="theme" type="button" aria-pressed="true">☾ Dark mode</button>
+    </div>
+    <div class="row audio-row">
+      <button class="seal music-btn" id="amb" type="button" aria-pressed="false">♫ Start ambience</button>
+      <button class="ghost" id="snd" type="button" aria-pressed="true">SFX: on</button>
+    </div>
+    <div class="row volume-row">
+      <span class="meta">MASTER VOLUME</span>
+      <input class="vol" id="vol" type="range" min="0" max="100" value="76" aria-label="Master volume">
+    </div>
+    <p class="audio-note">Continuous koto-like melody · warm drone · soft wind ambience</p>
+    <div class="side-tools">
+      <button class="ghost" id="refreshAll" type="button">↻ Refresh feeds</button>
+      <button class="ghost" id="opmlExport" type="button">⇧ Export OPML</button>
+      <button class="ghost" id="opmlImportBtn" type="button">⇩ Import OPML</button>
+      <input id="opmlFile" type="file" accept=".opml,.xml,text/xml,application/xml" hidden>
+    </div>
+    <div class="privacy-mini">
+      <span class="section-kicker">ANONYMOUS DISCOVERY</span>
+      <label class="consent"><input type="checkbox" id="shareConsent"> I choose to share my subscriptions as one anonymous batch.</label>
+      <button class="seal" id="shareNow" type="button">Share subscriptions</button>
+      <p class="meta">Off by default. No account or persistent reader ID. Only feed URLs are shared when you press the button.</p>
+    </div>
+    <p class="meta keys" style="margin-top:1rem">Keys: <b>j</b>/<b>k</b> next/prev · <b>s</b> star · <b>o</b> omikuji · <b>m</b> mute SFX · <b>Esc</b> close</p>
+  </aside>
+  <main class="main">
+    <section class="hero" aria-label="Mystic Mikado introduction">
+      <div class="hero-copy">
+        <p class="eyebrow">風林火山 <span>·</span> THE WAY OF THE SHADOW</p>
+        <h2>Walk the path.<br><em>Master the silence.</em></h2>
+        <p class="hero-desc">A quieter web, one independent voice at a time. No ranking in your timeline. You choose what you follow.</p>
+        <div class="hero-rule"><span></span><span></span><span></span></div>
+      </div>
+      <div class="hero-stamp" aria-hidden="true">影</div>
+    </section>
+    <nav class="page-nav" aria-label="Main pages">
+      <button class="ghost nav-tab is-active" id="navTimeline" data-view="timeline" aria-pressed="true">◈ Timeline</button>
+      <button class="ghost nav-tab" id="navDiscover" data-view="discover" aria-pressed="false">✧ Discover</button>
+      <span class="badge" id="connectionStatus">Loading local library…</span>
+    </nav>
+    <section class="view" id="timelineView" aria-label="Unified timeline">
+      <div class="bar timeline-bar">
+        <input class="field" id="q" placeholder="Search the scrolls" aria-label="Search articles">
+        <select class="field feed-filter" id="feedFilter" aria-label="Filter by subscription"><option value="">Every subscription</option></select>
+        <button class="ghost" data-flt="all" aria-pressed="true">All</button>
+        <button class="ghost" data-flt="unread" aria-pressed="false">Unread</button>
+        <button class="ghost" data-flt="star" aria-pressed="false">Starred</button>
+        <button class="ghost" id="sort" type="button">Newest first</button>
+      </div>
+      <div class="timeline-caption"><span id="timelineSummary">Chronological by publication date</span><span id="lastRefresh" class="meta"></span></div>
+      <div id="list" aria-live="polite"></div>
+    </section>
+    <section class="view discover-view" id="discoverView" hidden aria-label="Discover blogs">
+      <div class="discover-head">
+        <p class="eyebrow">NO FEED ALGORITHM · JUST OVERLAP</p>
+        <h2>Find your next <em>good read.</em></h2>
+        <p>Recommendations come from anonymous opt-in subscription batches. Your timeline stays chronological; nothing here is inserted into it.</p>
+      </div>
+      <div class="discover-columns">
+        <section class="discover-panel">
+          <div class="panel-heading"><div><span class="section-kicker">THE COMMON ROOM</span><h3>Popular feeds</h3></div><button class="ghost" id="reloadDiscover" type="button">↻ Refresh</button></div>
+          <p class="meta">Ranked by aggregate opt-in submissions. Counts are batches, not verified unique people.</p>
+          <div id="popularList" class="recommend-list"></div>
+        </section>
+        <section class="discover-panel">
+          <div class="panel-heading"><div><span class="section-kicker">SHARED CURIOSITY</span><h3>Blogs like yours</h3></div></div>
+          <p class="meta" id="recommendIntro">Follow a blog, then choose to share anonymously to help improve overlap-based suggestions.</p>
+          <div id="recommendList" class="recommend-list"></div>
+        </section>
+      </div>
+      <div class="privacy-card"><strong>Privacy by design</strong><p>The server receives feed URLs only after you opt in and press Share. It stores aggregate counts and co-subscription pairs, not article text, browsing history, accounts, or a persistent reader ID. Rate-limit IPs are salted hashes with short expiry.</p></div>
+    </section>
+  </main>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<div class="veil" id="slipv" hidden><div class="slip" id="slip"></div></div>
+<div class="veil" id="readv" hidden>
+  <article class="paper" aria-labelledby="rt">
+    <button class="close" id="x" type="button" aria-label="Close reading view">×</button>
+    <span id="rstamp"></span>
+    <h2 id="rt"></h2><p class="meta" id="rm"></p>
+    <div class="tools"><button class="ghost" id="fm" type="button" aria-label="Smaller text">A−</button><button class="ghost" id="fp" type="button" aria-label="Larger text">A＋</button><button class="ghost" id="rs" type="button">☆ Star</button><button class="ghost" id="markUnread" type="button">Mark unread</button></div>
+    <div class="sage" id="sage"></div>
+    <div class="article-status" id="articleStatus" role="status">Loading article…</div>
+    <div class="body" id="rb"></div>
+    <div class="reader-footer"><a id="originalLink" href="#" target="_blank" rel="noopener noreferrer">Open original article ↗</a><span class="meta" id="cacheStatus"></span></div>
+  </article>
+</div>
+<div class="ambient-dock" id="ambientDock" role="group" aria-label="Background music controls">
+  <div class="ambient-dock-copy"><strong>SHADOW AMBIENCE</strong><span id="ambState">Ready · dragon moon</span></div>
+  <button class="ghost" id="ambMini" type="button" aria-pressed="false" aria-label="Pause or resume background music">▶ Play</button>
+  <input class="vol" id="volMini" type="range" min="0" max="100" value="76" aria-label="Background music volume while reading">
+</div>
+<script src="/app.js" defer></script>
+</body>
+</html>

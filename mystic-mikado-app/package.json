@@ -1,0 +1,14 @@
+{
+  "name": "mystic-mikado-shadow-dragon-reader",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline-first RSS/Atom reader with opt-in anonymous discovery and a Japanese-fantasy UI.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check app.js && node --check server.js && node --check lib/safe-url.js && node --check lib/raw-proxy.js && node --check api/fetch.js && node --check api/discovery/token.js && node --check api/discovery/submit.js && node --check api/discovery/recommendations.js && node --check api/discovery/popular.js"
+  }
+}
